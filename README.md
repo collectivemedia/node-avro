@@ -4,56 +4,43 @@ This project aims to create a library for reading and writing
 [Avro](http://avro.apache.org/)-serialized data in
 [Node.js](http://nodejs.org/) applications.
 
-It is currently in an early planning phase.
-
 ## Licensing
 
 node-avro is licensed under the MIT license.
 
-## Author
+## Contact
 
-node-avro is created by Manuel Simoni
+Node-avro is created by Manuel Simoni
 ([msimoni@gmail.com](mailto:msimoni@gmail.com)) for [Collective Media,
 Inc](http://www.collective.com/).
 
-# Use Cases
+## Install
 
-## Sample Schema "person.avsc"
+### Prerequisites
 
-```javascript
-{
-  "type" : "record",
-  "name" : "Person",
-  "fields" : [ {
-    "name" : "firstName",
-    "type" : "string"
-  }, {
-    "name" : "birthday",
-    "type" : "long",
-    "doc": "birthday in seconds (silly)"
-  } ]
-}
+#### Node.js 0.8.8
+
+#### node-gyp build tool 0.6.10
+
+#### Avro C++ library 1.7.1
+
+NOTE: The Avro header files must be under /usr/local/include/avro or
+otherwise the include_dirs directive in the binding.gyp file must be
+changed to point to the location.
+
+### Build
+
+```
+node-gyp configure
+node-gyp build
 ```
 
-## Writing Data
+This creates a directory called build/ containing the build outputs.
+After changing the binding.gyp file (and in some other mysterious
+cases) it has been necessary to remove the build/ directory.
 
-```javascript
-var personSchema = avro.loadSchema("person.avsc");
+### Use
 
-var person = { "firstName": "Alice", "birthday": 2388301928301831208 };
-
-var encodedBuffer = avro.jsonToBuffer(personSchema, person);
 ```
-
-## Reading Data
-
-```javascript
-var personSchema = avro.loadSchema("person.avsc");
-
-var encodedBuffer = myReadBufferFromSomewhere();
-
-var person = avro.bufferToJson(personSchema, encodedBuffer);
-
-console.log(person.firstName);
-console.log(person.birthday);
+var avro = require("./build/Release/avro");
 ```
