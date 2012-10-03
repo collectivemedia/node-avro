@@ -36,11 +36,19 @@ node-gyp build
 ```
 
 This creates a directory called build/ containing the build outputs.
-After changing the binding.gyp file (and in some other mysterious
-cases) it has been necessary to remove the build/ directory.
+After changing the binding.gyp file it has been necessary to remove
+the build/ directory.
 
 ### Use
 
 ```
+export LD_LIBRARY_PATH=/usr/local/lib
+```
+
+In JavaScript:
+
+```
 var avro = require("./build/Release/avro");
 ```
+
+See test.js.
