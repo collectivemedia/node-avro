@@ -22,7 +22,7 @@ Inc](http://www.collective.com/).
 
 #### node-gyp build tool 0.6.10
 
-#### Avro C++ library 1.7.1
+#### Avro C++ library 1.7.2
 
 NOTE: The Avro header files must be under /usr/local/include/avro or
 otherwise the include_dirs directive in the binding.gyp file must be
