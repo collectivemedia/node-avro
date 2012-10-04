@@ -10,6 +10,8 @@
 #include <node_buffer.h>
 #include <v8.h>
 
+#include "CountingBinaryEncoder.hh"
+
 using namespace std;
 using namespace v8;
 
@@ -61,7 +63,7 @@ static Handle<Value> JsonStringToAvroBuffer(const Arguments& args) {
 
   stringstream ss(stringstream::out);
   auto_ptr<avro::OutputStream> out = avro::ostreamOutputStream(ss);
-  avro::EncoderPtr encoder = avro::binaryEncoder();
+  boost::shared_ptr<CountingBinaryEncoder> encoder = countingBinaryEncoder();
   encoder->init(*out);
   avro::encode(*encoder, datum);
   out->flush();
@@ -69,7 +71,8 @@ static Handle<Value> JsonStringToAvroBuffer(const Arguments& args) {
 
   // Copy data to buffer and return it
 
-  Handle<Value> buffer = node::Buffer::New((char *) s.data(), s.size())->handle_;
+  size_t bytesWritten = encoder->getBytesWritten();
+  Handle<Value> buffer = node::Buffer::New((char *) s.data(), bytesWritten)->handle_;
   return scope.Close(buffer);
 }
 

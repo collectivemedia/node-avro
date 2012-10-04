@@ -4,7 +4,7 @@
   [
     {
       "target_name": "avro",
-      "sources": ["node_avro.cc"],
+      "sources": ["node_avro.cc", "CountingBinaryEncoder.cc"],
       'link_settings': {
           'libraries': [
               '/usr/local/lib/libavrocpp.so'
@@ -14,10 +14,6 @@
   ],
   "target_defaults":
   {
-    # If this is not set, `Buffer.hh` doesn't find the header `Config.hh`.
-
-    "include_dirs": ["/usr/local/include/avro"],
-
     # Exceptions and RTTI must be re-enabled because the Avro C++
     # library makes use of them.
 
