@@ -1,12 +1,41 @@
 var avro = require("./build/Release/avro");
 
-var schema1 = "string";
-var value1_1 = "foo";
+/*
+  Tests for examples from specification
+*/
 
-var buf1_1 = avro.jsonStringToAvroBuffer(JSON.stringify(schema1), JSON.stringify(value1_1));
+function assertMatchesHex(schema, value, hex) {
+    var buf = avro.jsonStringToAvroBuffer(JSON.stringify(schema), JSON.stringify(value));
+    var bufHex = buf.toString("hex");
+    if (hex !== bufHex) {
+        throw "Value " + JSON.stringify(value) + " doesn't match specified hex " + hex +
+              ", has " + bufHex + " instead.";
+    }
+}
 
-console.log(buf1_1);
+assertMatchesHex("string", "foo", "06666f6f");
 
-var value1_1_decoded = avro.avroBufferToJsonString(JSON.stringify(schema1), buf1_1);
+var recordSchema =
+  {
+    "type": "record", 
+    "name": "test",
+    "fields" : [
+      {"name": "a", "type": "long"},
+      {"name": "b", "type": "string"}
+    ]
+  };
 
-console.log(value1_1_decoded);
+var record = { "a": 27, "b": "foo" };
+
+assertMatchesHex(recordSchema, record, "3606666f6f");
+
+var arraySchema = { "type": "array", "items": "long" };
+
+var array = [ 3, 27 ];
+
+assertMatchesHex(arraySchema, array, "04063600");
+
+var unionSchema = ["string", "null"];
+
+assertMatchesHex(unionSchema, null, "02");
+assertMatchesHex(unionSchema, "a", "000261");
