@@ -38,4 +38,17 @@ assertMatchesHex(arraySchema, array, "04063600");
 var unionSchema = ["string", "null"];
 
 assertMatchesHex(unionSchema, null, "02");
-assertMatchesHex(unionSchema, "a", "000261");
+
+/*
+  Test zigzag encoding from specification
+*/
+
+var zigzagSchema = "int";
+
+assertMatchesHex(zigzagSchema, 0, "00");
+assertMatchesHex(zigzagSchema, -1, "01");
+assertMatchesHex(zigzagSchema, 1, "02");
+assertMatchesHex(zigzagSchema, -2, "03");
+assertMatchesHex(zigzagSchema, 2, "04");
+assertMatchesHex(zigzagSchema, -64, "7f");
+assertMatchesHex(zigzagSchema, 64, "8001");
