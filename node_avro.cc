@@ -1,3 +1,4 @@
+#include <avro/BinaryEncoder.hh>
 #include <avro/Compiler.hh>
 #include <avro/Decoder.hh>
 #include <avro/Encoder.hh>
@@ -69,7 +70,10 @@ static Handle<Value> JsonStringToAvroBuffer(const Arguments& args) {
 
   // Copy data to buffer and return it
 
-  Handle<Value> buffer = node::Buffer::New((char *) s.data(), s.size())->handle_;
+  avro::BinaryEncoder *binaryEncoder = (avro::BinaryEncoder *) &(*encoder);
+  avro::StreamWriter &sw = binaryEncoder->getStreamWriter();
+
+  Handle<Value> buffer = node::Buffer::New((char *) s.data(), sw.getBytesWritten())->handle_;
   return scope.Close(buffer);
 }
 

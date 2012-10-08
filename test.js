@@ -8,8 +8,8 @@ function assertMatchesHex(schema, value, hex) {
     var buf = avro.jsonStringToAvroBuffer(JSON.stringify(schema), JSON.stringify(value));
     var bufHex = buf.toString("hex");
     if (hex !== bufHex) {
-        throw "Value " + JSON.stringify(value) + " doesn't match specified hex " + hex +
-              ", has " + bufHex + " instead.";
+        throw "Value " + JSON.stringify(value) + " doesn't match specified hex '" + hex +
+              "', has '" + bufHex + "' instead.";
     }
 }
 
