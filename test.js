@@ -52,3 +52,22 @@ assertMatchesHex(zigzagSchema, -2, "03");
 assertMatchesHex(zigzagSchema, 2, "04");
 assertMatchesHex(zigzagSchema, -64, "7f");
 assertMatchesHex(zigzagSchema, 64, "8001");
+
+/*
+  Test roundtripping from JS to Avro and back to JS
+*/
+
+function assertRoundtrip(schema, value) {
+    var schemaJson = JSON.stringify(schema);
+    var valueJson = JSON.stringify(value);
+    var buf = avro.jsonStringToAvroBuffer(schemaJson, valueJson);
+    var json = avro.avroBufferToJsonString(schemaJson, buf);
+    if (json !== valueJson) {
+        throw "Value " + valueJson + " doesn't match " + json + ".";
+    }
+}
+
+assertRoundtrip("string", "foo");
+assertRoundtrip("int", 12);
+assertRoundtrip("long", 12);
+

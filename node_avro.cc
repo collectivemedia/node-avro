@@ -4,9 +4,11 @@
 #include <avro/Encoder.hh>
 #include <avro/Generic.hh>
 #include <avro/Specific.hh>
+#include <avro/Symbol.hh>
 #include <avro/ValidSchema.hh>
 #include <avro/buffer/Buffer.hh>
 #include <avro/buffer/BufferStream.hh>
+#include <avro/json/JsonEncoder.hh>
 #include <node.h>
 #include <node_buffer.h>
 #include <v8.h>
@@ -131,7 +133,11 @@ static Handle<Value> AvroBufferToJsonString(const Arguments& args) {
   out->flush();
   string s = ss.str();
 
-  return scope.Close(String::New((char *) s.data(), s.size()));
+  avro::parsing::JsonEncoder<avro::parsing::SimpleParser<avro::parsing::JsonHandler> >  *jsonEncoder =
+    (avro::parsing::JsonEncoder<avro::parsing::SimpleParser<avro::parsing::JsonHandler> > *) &(*encoder);
+  avro::StreamWriter &sw = jsonEncoder->getStreamWriter();
+
+  return scope.Close(String::New((char *) s.data(), sw.getBytesWritten()));
 }
 
 void init(Handle<Object> target) {
