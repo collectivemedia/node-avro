@@ -70,4 +70,7 @@ function assertRoundtrip(schema, value) {
 assertRoundtrip("string", "foo");
 assertRoundtrip("int", 12);
 assertRoundtrip("long", 12);
-
+assertRoundtrip({ "type": "array", "items": "string" },
+                [ "a", "b", "c" ]);
+assertRoundtrip({ "type": "record", "name": "test", "fields" : [ {"name": "a", "type": "long"} ] },
+                { "a": 12 });
