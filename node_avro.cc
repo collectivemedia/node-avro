@@ -67,6 +67,7 @@ static Handle<Value> JsonStringToAvroBuffer(const Arguments& args) {
   avro::EncoderPtr encoder = avro::binaryEncoder();
   encoder->init(*out);
   avro::encode(*encoder, datum);
+  encoder->flush();
   out->flush();
   string s = ss.str();
 
@@ -130,6 +131,7 @@ static Handle<Value> AvroBufferToJsonString(const Arguments& args) {
   avro::EncoderPtr encoder = avro::jsonEncoder(schema);
   encoder->init(*out);
   avro::encode(*encoder, datum);
+  encoder->flush();
   out->flush();
   string s = ss.str();
 
