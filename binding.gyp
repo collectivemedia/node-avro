@@ -7,7 +7,7 @@
       "sources": ["node_avro.cc"],
       'link_settings': {
           'libraries': [
-              '/usr/local/lib/libavrocpp.so'
+              '-lavrocpp'
           ]
       }
     }
