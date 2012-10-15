@@ -1,0 +1,10 @@
+{
+  "name": "node-avro",
+  "version": "0.0.1",
+  "description": "Avro serialization format support for Node.js",
+  "private": true,
+  "devDependencies" : {
+      "mocha": "*"
+  },
+  "license": "MIT"
+}
