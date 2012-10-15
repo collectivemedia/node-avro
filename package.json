@@ -4,7 +4,8 @@
   "description": "Avro serialization format support for Node.js",
   "private": true,
   "devDependencies" : {
-      "mocha": "*"
+      "mocha": "*",
+      "should": "*"
   },
   "license": "MIT"
 }

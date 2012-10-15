@@ -1,16 +1,31 @@
 var avro = require("../build/Release/avro");
+var should = require("should");
 
 /*
   Tests for examples from specification
 */
 
 function assertMatchesHex(schema, value, hex) {
-    var buf = avro.jsonStringToAvroBuffer(JSON.stringify(schema), JSON.stringify(value));
-    var bufHex = buf.toString("hex");
-    if (hex !== bufHex) {
+
+    // Check that encoded value matches hex from spec
+    var encBuf = avro.jsonStringToAvroBuffer(JSON.stringify(schema), JSON.stringify(value));
+    var encBufHex = encBuf.toString("hex");
+    if (hex !== encBufHex) {
         throw "Value " + JSON.stringify(value) + " doesn't match specified hex '" + hex +
-              "', has '" + bufHex + "' instead.";
+              "', has '" + encBufHex + "' instead.";
     }
+
+    // Check that decoding hex from spec matches value
+    var decBuf = new Buffer(hex, "hex");
+    var decValue = JSON.parse(avro.avroBufferToJsonString(JSON.stringify(schema), decBuf));
+    if (value === null) {
+        if (decValue !== null) {
+            throw "Decoded value should be null, but is " + JSON.stringify(decValue);
+        }
+    } else {
+        value.should.eql(decValue);
+    }
+
 }
 
 describe("Avro specification tests", function() {
