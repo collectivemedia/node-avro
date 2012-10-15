@@ -83,10 +83,18 @@ function assertRoundtrip(schema, value) {
     }
 }
 
-assertRoundtrip("string", "foo");
-assertRoundtrip("int", 12);
-assertRoundtrip("long", 12);
-assertRoundtrip({ "type": "array", "items": "string" },
-                [ "a", "b", "c" ]);
-assertRoundtrip({ "type": "record", "name": "test", "fields" : [ {"name": "a", "type": "long"} ] },
-                { "a": 12 });
+describe("Avro roundtrip tests", function() {
+
+    it("should be able to roundtrip arbitrary values between JS and Avro", function() {
+
+        assertRoundtrip("string", "foo");
+        assertRoundtrip("int", 12);
+        assertRoundtrip("long", 12);
+        assertRoundtrip({ "type": "array", "items": "string" },
+                        [ "a", "b", "c" ]);
+        assertRoundtrip({ "type": "record", "name": "test", "fields" : [ {"name": "a", "type": "long"} ] },
+                        { "a": 12 });
+
+    });
+
+});
