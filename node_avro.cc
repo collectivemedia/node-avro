@@ -16,6 +16,66 @@
 using namespace std;
 using namespace v8;
 
+Persistent<ObjectTemplate> avroSchemaTemplate;
+
+Handle<ObjectTemplate> MakeAvroSchemaTemplate() {
+  HandleScope handle_scope;
+  Handle<ObjectTemplate> result = ObjectTemplate::New();
+  result->SetInternalFieldCount(1);
+  return handle_scope.Close(result);
+}
+
+/*
+  Wraps a parsed schema in a V8 schema object.
+*/
+Handle<Object> WrapAvroSchema(avro::ValidSchema *schema) {
+  HandleScope handle_scope;
+  if (avroSchemaTemplate.IsEmpty()) {
+    Handle<ObjectTemplate> rawTemplate = MakeAvroSchemaTemplate();
+    avroSchemaTemplate = Persistent<ObjectTemplate>::New(rawTemplate);
+  }
+  Handle<ObjectTemplate> templ = avroSchemaTemplate;
+  Handle<Object> result = templ->NewInstance();
+  Handle<External> schemaPtr = External::New(schema);
+  result->SetInternalField(0, schemaPtr);
+  return handle_scope.Close(result);
+}
+
+/*
+  Extracts the wrapped schema from a V8 schema object.
+*/
+avro::ValidSchema *UnwrapAvroSchema(Handle<Object> obj) {
+  Handle<External> field = Handle<External>::Cast(obj->GetInternalField(0));
+  void* ptr = field->Value();
+  return static_cast<avro::ValidSchema*>(ptr);
+}
+
+/*
+  Takes a JSON schema as input and returns a V8 schema object.
+*/
+static Handle<Value> ParseAvroSchema(const Arguments& args) {
+  HandleScope scope;
+
+  if (args.Length() != 1) {
+    ThrowException(Exception::TypeError(String::New("Wrong number of arguments")));
+    return scope.Close(Undefined());
+  }
+
+  Handle<Value> schemaString = args[0];
+
+  if (!schemaString->IsString()) {
+    ThrowException(Exception::TypeError(String::New("Schema must be a string")));
+    return scope.Close(Undefined());
+  }
+
+  String::Utf8Value schemaUtf8Value(schemaString);
+  uint8_t *schemaBytes = (uint8_t *) *schemaUtf8Value;
+  
+  avro::ValidSchema schema = avro::compileJsonSchemaFromMemory(schemaBytes, schemaUtf8Value.length());
+  
+  return WrapAvroSchema(&schema);
+}
+
 /*
   Takes two arguments, an Avro schema as a JSON string, and an Avro
   value as a JSON string, and returns a buffer containing the encoded
@@ -31,24 +91,17 @@ static Handle<Value> JsonStringToAvroBuffer(const Arguments& args) {
     return scope.Close(Undefined());
   }
 
-  Handle<Value> schemaString = args[0];
+  Handle<Object> schemaObject = args[0]->ToObject();
   Handle<Value> jsonString = args[1];
-
-  if (!schemaString->IsString()) {
-    ThrowException(Exception::TypeError(String::New("Schema must be a string")));
-    return scope.Close(Undefined());
-  }
 
   if (!jsonString->IsString()) {
     ThrowException(Exception::TypeError(String::New("JSON must be a string")));
     return scope.Close(Undefined());
   }
 
-  // Compile schema
+  // Get schema
 
-  String::Utf8Value schemaUtf8Value(schemaString);
-  uint8_t *schemaBytes = (uint8_t *) *schemaUtf8Value;
-  avro::ValidSchema schema = avro::compileJsonSchemaFromMemory(schemaBytes, schemaUtf8Value.length());
+  avro::ValidSchema schema = *UnwrapAvroSchema(schemaObject);
 
   // Decode JSON from string
 
@@ -95,24 +148,17 @@ static Handle<Value> AvroBufferToJsonString(const Arguments& args) {
     return scope.Close(Undefined());
   }
 
-  Handle<Value> schemaString = args[0];
+  Handle<Object> schemaObject = args[0]->ToObject();
   Handle<Value> avroBuffer = args[1];
-
-  if (!schemaString->IsString()) {
-    ThrowException(Exception::TypeError(String::New("Schema must be a string")));
-    return scope.Close(Undefined());
-  }
 
   if (!node::Buffer::HasInstance(avroBuffer)) {
     ThrowException(Exception::TypeError(String::New("Not a buffer")));
     return scope.Close(Undefined());
   }
 
-  // Compile schema
+  // Get schema
 
-  String::Utf8Value schemaUtf8Value(schemaString);
-  uint8_t *schemaBytes = (uint8_t *) *schemaUtf8Value;
-  avro::ValidSchema schema = avro::compileJsonSchemaFromMemory(schemaBytes, schemaUtf8Value.length());
+  avro::ValidSchema schema = *UnwrapAvroSchema(schemaObject);
 
   // Decode data from buffer
 
@@ -147,6 +193,8 @@ void init(Handle<Object> target) {
               FunctionTemplate::New(JsonStringToAvroBuffer)->GetFunction());
   target->Set(String::NewSymbol("avroBufferToJsonString"),
               FunctionTemplate::New(AvroBufferToJsonString)->GetFunction());
+  target->Set(String::NewSymbol("parseSchema"),
+              FunctionTemplate::New(ParseAvroSchema)->GetFunction());
 }
 
 NODE_MODULE(avro, init)
