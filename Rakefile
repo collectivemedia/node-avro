@@ -4,8 +4,10 @@ def mocha(files)
   sh './bin/mocha ' + files.shuffle.join(' ')
 end
 
+task :default => :test
+
 desc 'Run tests'
-task :test do
+task :test => 'npm:install' do
   mocha FileList['test/*.ls']
 end
 
