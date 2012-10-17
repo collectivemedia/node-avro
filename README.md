@@ -18,9 +18,7 @@ Inc](http://www.collective.com/).
 
 ### Prerequisites
 
-#### Node.js 0.8.8
-
-#### node-gyp build tool 0.6.10
+#### Node.js 0.8.8 and npm
 
 #### Modified Avro C++ library 1.7.2
 
@@ -33,19 +31,14 @@ changed to point to the location.
 ### Build
 
 ```
-node-gyp configure
-node-gyp build
+$ npm install
 ```
 
-This creates a directory called build/ containing the build outputs.
-After changing the binding.gyp file it has been necessary to remove
-the build/ directory.
+This creates a directory called build/ containing the build outputs,
+and node_modules/ containing required modules.  After changing the
+binding.gyp file it has been necessary to remove the build/ directory.
 
 ### Use
-
-```
-export LD_LIBRARY_PATH=/usr/local/lib
-```
 
 In JavaScript:
 
@@ -53,4 +46,10 @@ In JavaScript:
 var avro = require("./build/Release/avro");
 ```
 
-See test.js.
+See test.js for examples.
+
+### Test
+
+```
+$ ./bin/run-tests
+```
