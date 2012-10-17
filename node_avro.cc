@@ -71,9 +71,10 @@ static Handle<Value> ParseAvroSchema(const Arguments& args) {
   String::Utf8Value schemaUtf8Value(schemaString);
   uint8_t *schemaBytes = (uint8_t *) *schemaUtf8Value;
   
-  avro::ValidSchema schema = avro::compileJsonSchemaFromMemory(schemaBytes, schemaUtf8Value.length());
+  avro::ValidSchema *schema =
+    new avro::ValidSchema(avro::compileJsonSchemaFromMemory(schemaBytes, schemaUtf8Value.length()));
   
-  return WrapAvroSchema(&schema);
+  return WrapAvroSchema(schema);
 }
 
 /*
