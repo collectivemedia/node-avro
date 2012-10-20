@@ -1,2 +1,2 @@
 #!/bin/sh
-npm install && ./bin/run-tests
+npm install && npm test
