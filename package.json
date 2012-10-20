@@ -3,9 +3,12 @@
   "version": "0.0.1",
   "description": "Avro serialization format support for Node.js",
   "private": true,
-  "devDependencies" : {
-      "mocha": "*",
-      "should": "*"
+  "devDependencies": {
+    "mocha": "*",
+    "should": "*"
+  },
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha test/*.js"
   },
   "license": "MIT"
 }

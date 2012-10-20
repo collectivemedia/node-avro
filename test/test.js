@@ -7,8 +7,10 @@ var should = require("should");
 
 function assertMatchesHex(schema, value, hex) {
 
+    var schemaObj = avro.parseSchema(JSON.stringify(schema));
+
     // Check that encoded value matches hex from spec
-    var encBuf = avro.jsonStringToAvroBuffer(JSON.stringify(schema), JSON.stringify(value));
+    var encBuf = avro.jsonStringToAvroBuffer(schemaObj, JSON.stringify(value));
     var encBufHex = encBuf.toString("hex");
     if (hex !== encBufHex) {
         throw "Value " + JSON.stringify(value) + " doesn't match specified hex '" + hex +
@@ -17,7 +19,7 @@ function assertMatchesHex(schema, value, hex) {
 
     // Check that decoding hex from spec matches value
     var decBuf = new Buffer(hex, "hex");
-    var decValue = JSON.parse(avro.avroBufferToJsonString(JSON.stringify(schema), decBuf));
+    var decValue = JSON.parse(avro.avroBufferToJsonString(schemaObj, decBuf));
     if (value === null) {
         if (decValue !== null) {
             throw "Decoded value should be null, but is " + JSON.stringify(decValue);
@@ -89,10 +91,10 @@ describe("Zigzag encoding tests", function() {
 */
 
 function assertRoundtrip(schema, value) {
-    var schemaJson = JSON.stringify(schema);
+    var schemaObj = avro.parseSchema(JSON.stringify(schema));
     var valueJson = JSON.stringify(value);
-    var buf = avro.jsonStringToAvroBuffer(schemaJson, valueJson);
-    var json = avro.avroBufferToJsonString(schemaJson, buf);
+    var buf = avro.jsonStringToAvroBuffer(schemaObj, valueJson);
+    var json = avro.avroBufferToJsonString(schemaObj, buf);
     if (json !== valueJson) {
         throw "Value " + valueJson + " doesn't match " + json + ".";
     }
@@ -109,6 +111,32 @@ describe("Avro roundtrip tests", function() {
                         [ "a", "b", "c" ]);
         assertRoundtrip({ "type": "record", "name": "test", "fields" : [ {"name": "a", "type": "long"} ] },
                         { "a": 12 });
+
+    });
+
+});
+
+describe("Error handling tests", function() {
+
+    it("built-in functions should throw an exception if called with the wrong arguments", function() {
+
+        (function() { avro.parseSchema(); }).should.throwError();
+        (function() { avro.parseSchema(12); }).should.throwError();
+        (function() { avro.parseSchema(true); }).should.throwError();
+
+        (function() { avro.jsonStringToAvroBuffer(); }).should.throwError();
+        (function() { avro.jsonStringToAvroBuffer(12); }).should.throwError();
+        (function() { avro.jsonStringToAvroBuffer("12"); }).should.throwError();
+        (function() { avro.jsonStringToAvroBuffer("\"string\""); }).should.throwError();
+        (function() { avro.jsonStringToAvroBuffer("\"string\"", 12); }).should.throwError();
+        (function() { avro.jsonStringToAvroBuffer("\"string\"", true); }).should.throwError();
+
+        (function() { avro.avroBufferToJsonString(); }).should.throwError();
+        (function() { avro.avroBufferToJsonString(12); }).should.throwError();
+        (function() { avro.avroBufferToJsonString("12"); }).should.throwError();
+        (function() { avro.avroBufferToJsonString("\"string\""); }).should.throwError();
+        (function() { avro.avroBufferToJsonString("\"string\"", 12); }).should.throwError();
+        (function() { avro.avroBufferToJsonString("\"string\"", true); }).should.throwError();
 
     });
 

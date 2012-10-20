@@ -51,5 +51,5 @@ See test.js for examples.
 ### Test
 
 ```
-$ ./bin/run-tests
+$ npm test
 ```
