@@ -53,7 +53,7 @@ avro::ValidSchema *UnwrapAvroSchema(Handle<Object> obj) {
 /*
   Takes a JSON schema as input and returns a V8 schema object.
 */
-static Handle<Value> ParseAvroSchema(const Arguments& args) {
+static Handle<Value> ParseAvroSchemaInternal(const Arguments& args) {
   HandleScope scope;
 
   if (args.Length() != 1) {
@@ -76,11 +76,22 @@ static Handle<Value> ParseAvroSchema(const Arguments& args) {
 }
 
 /*
+  Converts C++ exceptions to V8 exceptions.
+*/
+static Handle<Value> ParseAvroSchema(const Arguments& args) {
+  try {
+    return ParseAvroSchemaInternal(args);
+  } catch(exception &e) {
+    return v8::ThrowException(String::New(e.what()));
+  }
+}
+
+/*
   Takes two arguments, an Avro schema as a JSON string, and an Avro
   value as a JSON string, and returns a buffer containing the encoded
   data.
 */
-static Handle<Value> JsonStringToAvroBuffer(const Arguments& args) {
+static Handle<Value> JsonStringToAvroBufferInternal(const Arguments& args) {
   HandleScope scope;
 
   // Check arguments
@@ -131,11 +142,22 @@ static Handle<Value> JsonStringToAvroBuffer(const Arguments& args) {
 }
 
 /*
+  Converts C++ exceptions to V8 exceptions.
+*/
+static Handle<Value> JsonStringToAvroBuffer(const Arguments& args) {
+  try {
+    return JsonStringToAvroBufferInternal(args);
+  } catch(exception &e) {
+    return v8::ThrowException(String::New(e.what()));
+  }
+}
+
+/*
   Takes two arguments, an Avro schema as a JSON string, and a buffer
   containing encoded data, and returns a JSON string containing the
   decoded Avro value.
 */
-static Handle<Value> AvroBufferToJsonString(const Arguments& args) {
+static Handle<Value> AvroBufferToJsonStringInternal(const Arguments& args) {
   HandleScope scope;
 
   // Check arguments
@@ -181,6 +203,17 @@ static Handle<Value> AvroBufferToJsonString(const Arguments& args) {
   avro::StreamWriter &sw = jsonEncoder->getStreamWriter();
 
   return scope.Close(String::New((char *) s.data(), sw.getBytesWritten()));
+}
+
+/*
+  Converts C++ exceptions to V8 exceptions.
+*/
+static Handle<Value> AvroBufferToJsonString(const Arguments& args) {
+  try {
+    return AvroBufferToJsonStringInternal(args);
+  } catch(exception &e) {
+    return v8::ThrowException(String::New(e.what()));
+  }
 }
 
 void init(Handle<Object> target) {

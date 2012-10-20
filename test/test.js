@@ -125,11 +125,15 @@ describe("Error handling tests", function() {
         (function() { avro.parseSchema(true); }).should.throwError();
 
         (function() { avro.jsonStringToAvroBuffer(); }).should.throwError();
+        (function() { avro.jsonStringToAvroBuffer(12); }).should.throwError();
+        (function() { avro.jsonStringToAvroBuffer("12"); }).should.throwError();
         (function() { avro.jsonStringToAvroBuffer("\"string\""); }).should.throwError();
         (function() { avro.jsonStringToAvroBuffer("\"string\"", 12); }).should.throwError();
         (function() { avro.jsonStringToAvroBuffer("\"string\"", true); }).should.throwError();
 
         (function() { avro.avroBufferToJsonString(); }).should.throwError();
+        (function() { avro.avroBufferToJsonString(12); }).should.throwError();
+        (function() { avro.avroBufferToJsonString("12"); }).should.throwError();
         (function() { avro.avroBufferToJsonString("\"string\""); }).should.throwError();
         (function() { avro.avroBufferToJsonString("\"string\"", 12); }).should.throwError();
         (function() { avro.avroBufferToJsonString("\"string\"", true); }).should.throwError();
