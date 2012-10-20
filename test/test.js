@@ -115,3 +115,25 @@ describe("Avro roundtrip tests", function() {
     });
 
 });
+
+describe("Error handling tests", function() {
+
+    it("built-in functions should throw an exception if called with the wrong arguments", function() {
+
+        (function() { avro.parseSchema(); }).should.throwError();
+        (function() { avro.parseSchema(12); }).should.throwError();
+        (function() { avro.parseSchema(true); }).should.throwError();
+
+        (function() { avro.jsonStringToAvroBuffer(); }).should.throwError();
+        (function() { avro.jsonStringToAvroBuffer("\"string\""); }).should.throwError();
+        (function() { avro.jsonStringToAvroBuffer("\"string\"", 12); }).should.throwError();
+        (function() { avro.jsonStringToAvroBuffer("\"string\"", true); }).should.throwError();
+
+        (function() { avro.avroBufferToJsonString(); }).should.throwError();
+        (function() { avro.avroBufferToJsonString("\"string\""); }).should.throwError();
+        (function() { avro.avroBufferToJsonString("\"string\"", 12); }).should.throwError();
+        (function() { avro.avroBufferToJsonString("\"string\"", true); }).should.throwError();
+
+    });
+
+});
