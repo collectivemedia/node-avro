@@ -57,15 +57,13 @@ static Handle<Value> ParseAvroSchema(const Arguments& args) {
   HandleScope scope;
 
   if (args.Length() != 1) {
-    ThrowException(Exception::TypeError(String::New("Wrong number of arguments")));
-    return scope.Close(Undefined());
+    return ThrowException(Exception::TypeError(String::New("Wrong number of arguments")));
   }
 
   Handle<Value> schemaString = args[0];
 
   if (!schemaString->IsString()) {
-    ThrowException(Exception::TypeError(String::New("Schema must be a string")));
-    return scope.Close(Undefined());
+    return ThrowException(Exception::TypeError(String::New("Schema must be a string")));
   }
 
   String::Utf8Value schemaUtf8Value(schemaString);
@@ -88,16 +86,14 @@ static Handle<Value> JsonStringToAvroBuffer(const Arguments& args) {
   // Check arguments
 
   if (args.Length() != 2) {
-    ThrowException(Exception::TypeError(String::New("Wrong number of arguments")));
-    return scope.Close(Undefined());
+    return ThrowException(Exception::TypeError(String::New("Wrong number of arguments")));
   }
 
   Handle<Object> schemaObject = args[0]->ToObject();
   Handle<Value> jsonString = args[1];
 
   if (!jsonString->IsString()) {
-    ThrowException(Exception::TypeError(String::New("JSON must be a string")));
-    return scope.Close(Undefined());
+    return ThrowException(Exception::TypeError(String::New("JSON must be a string")));
   }
 
   // Get schema
@@ -145,16 +141,14 @@ static Handle<Value> AvroBufferToJsonString(const Arguments& args) {
   // Check arguments
 
   if (args.Length() != 2) {
-    ThrowException(Exception::TypeError(String::New("Wrong number of arguments")));
-    return scope.Close(Undefined());
+    return ThrowException(Exception::TypeError(String::New("Wrong number of arguments")));
   }
 
   Handle<Object> schemaObject = args[0]->ToObject();
   Handle<Value> avroBuffer = args[1];
 
   if (!node::Buffer::HasInstance(avroBuffer)) {
-    ThrowException(Exception::TypeError(String::New("Not a buffer")));
-    return scope.Close(Undefined());
+    return ThrowException(Exception::TypeError(String::New("Not a buffer")));
   }
 
   // Get schema
