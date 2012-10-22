@@ -1,3 +1,0 @@
-[submodule "avro-cpp"]
-	path = avro-cpp
-	url = git://github.com/manuel/avro-cpp.git

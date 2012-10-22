@@ -1,0 +1,7 @@
+set -e # this stops execution if one command fails
+
+git clone git://github.com/manuel/avro-cpp.git
+cd avro-cpp
+cmake -G "Unix Makefiles"
+make
+cd ..
