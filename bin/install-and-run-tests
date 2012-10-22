@@ -1,2 +1,16 @@
 #!/bin/sh
-npm install && npm test
+
+# A very simple script that downloads and compiles all dependencies,
+# compiles node-avro itself, and runs node-avro's tests, used for
+# continuous integration.
+
+set -e # this stops execution if one command fails
+
+git submodule init
+git submodule update
+cd avro-cpp
+cmake -G "Unix Makefiles"
+make
+cd ..
+npm install
+npm test
