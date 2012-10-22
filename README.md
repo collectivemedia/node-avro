@@ -7,7 +7,22 @@ This project aims to create a library for reading and writing
 It is currently basically functional, but not battle-tested in
 production yet.
 
-# Synopsis
+# Install & Use
+
+Currently the best way to use it from your project:
+
+```
+apt-get install cmake libboost-dev libboost-filesystem-dev libboost-system-dev libboost-program-options-dev
+git clone git://github.com/collectivemedia/node-avro.git
+cd node-avro
+./bin/install-and-run-tests
+cd ..
+npm install
+```
+
+(We're working on making this smoother.)
+
+Then you can `require` it from JS:
 
 ```
 var avro = require("avro");
@@ -19,12 +34,6 @@ var value = schema.decode(buffer);
 ## Licensing
 
 node-avro is licensed under the MIT license.
-
-## Requirements
-
-```
-apt-get install cmake libboost-dev libboost-filesystem-dev libboost-system-dev libboost-program-options-dev
-```
 
 ## Contact
 
