@@ -7,7 +7,7 @@
       "sources": ["node_avro.cc"],
       'link_settings': {
           'libraries': [
-              '-lavrocpp'
+              '-L <(module_root_dir)/avro-cpp -l avrocpp_s'
           ]
       }
     }
@@ -16,7 +16,7 @@
   {
     # If this is not set, `Buffer.hh` doesn't find the header `Config.hh`.
 
-    "include_dirs": ["/usr/local/include/avro"],
+    "include_dirs": ["<(module_root_dir)/avro-cpp/api"],
 
     # Exceptions and RTTI must be re-enabled because the Avro C++
     # library makes use of them.
