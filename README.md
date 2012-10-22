@@ -7,7 +7,7 @@ This project aims to create a library for reading and writing
 It is currently basically functional, but not battle-tested in
 production yet.
 
-# Install & Use
+## Install & Use
 
 Currently the best way to use it from your project:
 
