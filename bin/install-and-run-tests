@@ -4,6 +4,8 @@
 # compiles node-avro itself, and runs node-avro's tests, used for
 # continuous integration.
 
+set -e # this stops execution if one command fails
+
 git submodule init
 git submodule update
 cd avro-cpp
