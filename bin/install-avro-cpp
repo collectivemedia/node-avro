@@ -1,0 +1,9 @@
+#!/bin/sh
+set -e # this stops execution if one command fails
+
+git submodule init
+git submodule update
+cd avro-cpp
+cmake -G "Unix Makefiles"
+make
+cd ..

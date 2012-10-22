@@ -9,6 +9,7 @@
   },
   "main": "lib/index",
   "scripts": {
+    "preinstall": "./bin/install-avro-cpp",
     "test": "./node_modules/mocha/bin/mocha test/*.js"
   },
   "license": "MIT"
