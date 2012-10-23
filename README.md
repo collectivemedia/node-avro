@@ -36,7 +36,7 @@ var value = schema.decode(buffer);
 ### `avro.prepareSchema(<object>) -> <schema>`
 
 Creates a prepared schema object from a JS schema object, as defined
-in the [Avro spec](http://http://avro.apache.org/docs/current/spec.html).
+in the [Avro spec](http://avro.apache.org/docs/current/spec.html).
 
 ### `<schema>.encode(<value>) -> <buffer>`
 
