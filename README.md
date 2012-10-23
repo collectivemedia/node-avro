@@ -7,9 +7,9 @@ This project aims to create a library for reading and writing
 It is currently basically functional, but not battle-tested in
 production yet.
 
-## Install
+## Install on Debian/Ubuntu
 
-Currently the best way to use it from your project:
+In your Node project directory:
 
 ```
 apt-get install cmake libboost-dev libboost-filesystem-dev libboost-system-dev libboost-program-options-dev
@@ -20,7 +20,7 @@ cd ..
 npm install
 ```
 
-(We're working on making this smoother.)
+`cmake -version` should be at least 2.8.9-rc1, we had problems with 2.8.0.
 
 ## API
 
@@ -57,3 +57,9 @@ node-avro is licensed under the MIT license.
 Node-avro is created by Manuel Simoni
 ([msimoni@gmail.com](mailto:msimoni@gmail.com)) for [Collective Media,
 Inc](http://www.collective.com/).
+
+## Notes
+
+Node-avro currently depends on a (fork of the Avro C++
+library)[https://github.com/manuel/avro-cpp].  We are (working on
+upstreaming our changes)[https://github.com/collectivemedia/node-avro/issues/8].
