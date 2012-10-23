@@ -7,7 +7,7 @@ This project aims to create a library for reading and writing
 It is currently basically functional, but not battle-tested in
 production yet.
 
-## Install & Use
+## Install
 
 Currently the best way to use it from your project:
 
@@ -22,7 +22,9 @@ npm install
 
 (We're working on making this smoother.)
 
-Then you can `require` it from JS:
+## API
+
+### Example
 
 ```
 var avro = require("avro");
@@ -30,6 +32,21 @@ var schema = avro.prepareSchema("string");
 var buffer = schema.encode("foo");
 var value = schema.decode(buffer);
 ```
+
+### `avro.prepareSchema(<object>) -> <schema>`
+
+Creates a prepared schema object from a JS schema object, as defined
+in the [Avro spec](http://http://avro.apache.org/docs/current/spec.html).
+
+### `<schema>.encode(<value>) -> <buffer>`
+
+The `encode` method of a schema object takes a JS value and returns a
+binary buffer containing the Avro-encoded representation of the value.
+
+### `<schema>.decode(<buffer>) -> <value>`
+
+The `decode` method of a schema object takes a binary buffer
+containing an Avro-encoded value and returns the decoded JS value.
 
 ## Licensing
 
