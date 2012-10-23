@@ -1,4 +1,4 @@
-var avro = require("../build/Release/avro");
+var avro = require("../lib/index");
 var should = require("should");
 
 /*
@@ -7,10 +7,10 @@ var should = require("should");
 
 function assertMatchesHex(schema, value, hex) {
 
-    var schemaObj = avro.parseSchema(JSON.stringify(schema));
+    var schemaObj = avro.prepareSchema(schema);
 
     // Check that encoded value matches hex from spec
-    var encBuf = avro.jsonStringToAvroBuffer(schemaObj, JSON.stringify(value));
+    var encBuf = schemaObj.encode(value);
     var encBufHex = encBuf.toString("hex");
     if (hex !== encBufHex) {
         throw "Value " + JSON.stringify(value) + " doesn't match specified hex '" + hex +
@@ -19,7 +19,7 @@ function assertMatchesHex(schema, value, hex) {
 
     // Check that decoding hex from spec matches value
     var decBuf = new Buffer(hex, "hex");
-    var decValue = JSON.parse(avro.avroBufferToJsonString(schemaObj, decBuf));
+    var decValue = schemaObj.decode(decBuf);
     if (value === null) {
         if (decValue !== null) {
             throw "Decoded value should be null, but is " + JSON.stringify(decValue);
@@ -91,13 +91,9 @@ describe("Zigzag encoding tests", function() {
 */
 
 function assertRoundtrip(schema, value) {
-    var schemaObj = avro.parseSchema(JSON.stringify(schema));
-    var valueJson = JSON.stringify(value);
-    var buf = avro.jsonStringToAvroBuffer(schemaObj, valueJson);
-    var json = avro.avroBufferToJsonString(schemaObj, buf);
-    if (json !== valueJson) {
-        throw "Value " + valueJson + " doesn't match " + json + ".";
-    }
+    var schemaObj = avro.prepareSchema(schema);
+    var buf = schemaObj.encode(value);
+    schemaObj.decode(buf).should.eql(value);
 }
 
 describe("Avro roundtrip tests", function() {
@@ -120,23 +116,18 @@ describe("Error handling tests", function() {
 
     it("built-in functions should throw an exception if called with the wrong arguments", function() {
 
-        (function() { avro.parseSchema(); }).should.throwError();
-        (function() { avro.parseSchema(12); }).should.throwError();
-        (function() { avro.parseSchema(true); }).should.throwError();
+        (function() { avro.prepareSchema(); }).should.throwError();
+        (function() { avro.prepareSchema(12); }).should.throwError();
+        (function() { avro.prepareSchema(true); }).should.throwError();
 
-        (function() { avro.jsonStringToAvroBuffer(); }).should.throwError();
-        (function() { avro.jsonStringToAvroBuffer(12); }).should.throwError();
-        (function() { avro.jsonStringToAvroBuffer("12"); }).should.throwError();
-        (function() { avro.jsonStringToAvroBuffer("\"string\""); }).should.throwError();
-        (function() { avro.jsonStringToAvroBuffer("\"string\"", 12); }).should.throwError();
-        (function() { avro.jsonStringToAvroBuffer("\"string\"", true); }).should.throwError();
+        var schema = avro.prepareSchema("boolean");
+        (function() { schema.encode(); }).should.throwError();
+        (function() { schema.encode(12); }).should.throwError();
+        (function() { schema.encode("12"); }).should.throwError();
 
-        (function() { avro.avroBufferToJsonString(); }).should.throwError();
-        (function() { avro.avroBufferToJsonString(12); }).should.throwError();
-        (function() { avro.avroBufferToJsonString("12"); }).should.throwError();
-        (function() { avro.avroBufferToJsonString("\"string\""); }).should.throwError();
-        (function() { avro.avroBufferToJsonString("\"string\"", 12); }).should.throwError();
-        (function() { avro.avroBufferToJsonString("\"string\"", true); }).should.throwError();
+        (function() { schema.decode(); }).should.throwError();
+        (function() { schema.decode(12); }).should.throwError();
+        (function() { schema.decode("12"); }).should.throwError();
 
     });
 

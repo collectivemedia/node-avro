@@ -1,5 +1,5 @@
 {
-  "name": "node-avro",
+  "name": "avro",
   "version": "0.0.1",
   "description": "Avro serialization format support for Node.js",
   "private": true,
@@ -7,6 +7,7 @@
     "mocha": "*",
     "should": "*"
   },
+  "main": "lib/index",
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha test/*.js"
   },
