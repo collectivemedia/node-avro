@@ -1,3 +1,6 @@
+// Copyright (c) 2012 Collective Media, Inc.
+// Licensed under the MIT license, see the file LICENSE.
+
 #include <BinaryEncoder.hh>
 #include <Compiler.hh>
 #include <Decoder.hh>
