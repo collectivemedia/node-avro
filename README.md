@@ -60,6 +60,6 @@ Inc](http://www.collective.com/).
 
 ## Notes
 
-Node-avro currently depends on a (fork of the Avro C++
-library)[https://github.com/manuel/avro-cpp].  We are (working on
-upstreaming our changes)[https://github.com/collectivemedia/node-avro/issues/8].
+Node-avro currently depends on a [fork of the Avro C++
+library](https://github.com/manuel/avro-cpp).  We are [working on
+upstreaming our changes](https://github.com/collectivemedia/node-avro/issues/8).
