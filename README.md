@@ -17,7 +17,7 @@ git clone git://github.com/collectivemedia/node-avro.git
 cd node-avro
 ./bin/install-and-run-tests
 cd ..
-npm install
+npm install node-avro
 ```
 
 `cmake -version` should be at least 2.8.9-rc1, we had problems with 2.8.0.
