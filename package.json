@@ -1,6 +1,6 @@
 {
   "name": "avro",
-  "version": "0.0.1",
+  "version": "0.2.0",
   "description": "Avro serialization format support for Node.js",
   "private": true,
   "devDependencies": {
