@@ -22,6 +22,10 @@
     # library makes use of them.
 
     "cflags!": ["-fno-exceptions", "-fno-rtti"],
-    "cflags_cc!": ["-fno-exceptions", "-fno-rtti"]
+    "cflags_cc!": ["-fno-exceptions", "-fno-rtti"],
+
+    # Clang (LLVM 3.1svn) on OS X seems to need this
+    "cflags": ["-fcxx-exceptions"],
+    "cflags_cc": ["-fcxx-exceptions"],
   }
 }
