@@ -6,6 +6,9 @@
 
 set -e # this stops execution if one command fails
 
+# Needed for Clang 3.1svn
+export CXXFLAGS="-fcxx-exceptions"
+
 git submodule init
 git submodule update
 cd avro-cpp
